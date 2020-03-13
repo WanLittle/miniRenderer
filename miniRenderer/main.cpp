@@ -20,19 +20,28 @@ int main(int argc, char* argv[])
     Uint32 white = SDL_MapRGB(win->mCanvas->format, 255, 255, 255);
     Uint32 red = SDL_MapRGB(win->mCanvas->format, 255, 0, 0);
 
+    Vec3f light_dir(0, 0, -1);
+
     for (int i = 0; i < model->nfaces(); i++) 
     {
         std::vector<int> face = model->face(i);
-        Vec3f v0 = model->vert(face[0]);
-        Vec3f v1 = model->vert(face[1]);
-        Vec3f v2 = model->vert(face[2]);
-        int x0 = (v0.x + 1.0) * width / 2.0;
-        int y0 = (v0.y + 1.0) * height / 2.0;
-        int x1 = (v1.x + 1.0) * width / 2.0;
-        int y1 = (v1.y + 1.0) * height / 2.0;
-        int x2 = (v2.x + 1.0) * width / 2.0;
-        int y2 = (v2.y + 1.0) * height / 2.0;
-        triangle(Vec2i(x0, y0), Vec2i(x1, y1), Vec2i(x2, y2), win, white);
+        Vec2i screen_coords[3];
+        Vec3f world_coords[3];
+        for (int j = 0; j < 3; j++) 
+        {
+            Vec3f v = model->vert(face[j]);
+            screen_coords[j] = Vec2i((v.x + 1.) * width / 2., (v.y + 1.) * height / 2.);
+            world_coords[j] = v;
+        }
+        Vec3f n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0]);
+        n.normalize();
+        float intensity = n * light_dir;
+        if (intensity > 0) // ±³ÃæÍ¼Ôª intensity<0 ±»ÌÞ³ý
+        {
+            triangle(screen_coords[0], screen_coords[1], screen_coords[2], win,
+                SDL_MapRGB(win->mCanvas->format, intensity * 255, intensity * 255, intensity * 255));
+        }
+       
     }
 
     win->update();
