@@ -6,7 +6,7 @@ class Window
 {
 public:
     Window(int height, int width);
-    void setPixelColor(int x, int y, Uint32 color);
+    void setPixelColor(int x, int y, int r, int g, int b, int a);
     void update();
     void delay();
     void destroy();

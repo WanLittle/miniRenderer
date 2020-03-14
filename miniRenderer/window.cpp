@@ -24,9 +24,9 @@ Window::Window(int height, int width)
     mCanvas = SDL_GetWindowSurface(mWin);
 }
 
-void Window::setPixelColor(int x, int y, Uint32 color)
+void Window::setPixelColor(int x, int y, int r, int g, int b, int a)
 {
-    putpixel(mCanvas, x, y, color, true);
+    putpixel(mCanvas, x, y, SDL_MapRGBA(mCanvas->format, r, g, b, a), true);
 }
 
 void Window::update()
