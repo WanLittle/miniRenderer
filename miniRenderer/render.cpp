@@ -102,18 +102,21 @@ Vec3f barycentric(Vec2f A, Vec2f B, Vec2f C, Vec2f P)
 		s[i][2] = A[i] - P[i];
 	}
 	Vec3f u = cross(s[0], s[1]);
-	if (std::abs(u[2]) > 1e-2) // dont forget that u[2] is integer. If it is zero then triangle ABC is degenerate
+    // TODO：为什么这种情况是退化三角形
+	if (std::abs(u[2]) > 1e-2) //  u[2] is integer. 如果为0 则三角形ABC是退化的degenerate
 	{
 		return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
 	}
-	return Vec3f(-1, 1, 1); // in this case generate negative coordinates, it will be thrown away by the rasterizator
+	return Vec3f(-1, 1, 1); // 丢弃退化三角形
 }
 
-void triangle_barycentric(mat<4, 3, float>& clipc, IShader& shader, std::shared_ptr<Window>& win, float* zbuffer)
+void triangle_barycentric(const mat<4, 3, float>& clipc, const mat<4, 3, float>& ndc, 
+    IShader& shader, std::shared_ptr<Window>& win, float* zbuffer)
 {
-	mat<3, 4, float> pts = (Viewport * clipc).transpose(); // transposed to ease access to each of the points
-	mat<3, 2, float> pts2;
-	for (int i = 0; i < 3; i++) pts2[i] = proj<2>(pts[i] / pts[i][3]);
+	mat<3, 4, float> screen_triangle_point = (Viewport * ndc).transpose(); // 转置 方便获取每一个点
+	mat<3, 2, float> screen_triangle_point_2;
+	for (int i = 0; i < 3; i++)
+        screen_triangle_point_2[i] = proj<2>(screen_triangle_point[i]);
 
 	Vec2f bboxmin(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	Vec2f bboxmax(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
@@ -122,24 +125,25 @@ void triangle_barycentric(mat<4, 3, float>& clipc, IShader& shader, std::shared_
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			bboxmin[j] = std::max(0.f, std::min(bboxmin[j], pts2[i][j]));
-			bboxmax[j] = std::min(clamp[j], std::max(bboxmax[j], pts2[i][j]));
+			bboxmin[j] = std::max(0.f, std::min(bboxmin[j], screen_triangle_point_2[i][j]));
+			bboxmax[j] = std::min(clamp[j], std::max(bboxmax[j], screen_triangle_point_2[i][j]));
 		}
 	}
+
 	Vec2i P;
 	TGAColor color;
 	for (P.x = bboxmin.x; P.x <= bboxmax.x; P.x++)
 	{
 		for (P.y = bboxmin.y; P.y <= bboxmax.y; P.y++)
 		{
-			Vec3f bc_screen = barycentric(pts2[0], pts2[1], pts2[2], P);
+			Vec3f bc_screen = barycentric(screen_triangle_point_2[0], screen_triangle_point_2[1], screen_triangle_point_2[2], P);
 
 			// 属性插值
-			Vec3f bc_clip = Vec3f(bc_screen.x / pts[0][3], bc_screen.y / pts[1][3], bc_screen.z / pts[2][3]);
+			Vec3f bc_clip = Vec3f(bc_screen.x / clipc[3][0], bc_screen.y / clipc[3][1], bc_screen.z / clipc[3][2]);
 			bc_clip = bc_clip / (bc_clip.x + bc_clip.y + bc_clip.z);
-
+            // 根据质心坐标插值出深度
 			float frag_depth = clipc[2] * bc_clip;
-			if (bc_screen.x < 0 || bc_screen.y < 0 || bc_screen.z<0 || zbuffer[P.x + P.y * win->getWidth()] > frag_depth)
+			if (bc_screen.x < 0 || bc_screen.y < 0 || bc_screen.z < 0 || zbuffer[P.x + P.y * win->getWidth()] > frag_depth) // 深度测试
 				continue;
 			bool discard = shader.fragment(bc_clip, color);
 			if (!discard)

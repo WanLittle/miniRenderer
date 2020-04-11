@@ -33,7 +33,7 @@ template<typename T> struct dt<1, T>
 /////////////////////////////////////////////// 矩阵
 template<size_t DimRows, size_t DimCols, typename T> class mat
 {
-	vec<DimCols, T> rows[DimRows]; // 列优先存储
+	vec<DimCols, T> rows[DimRows]; // 行优先存储
 public:
 	mat() {}
 
@@ -56,21 +56,24 @@ public:
 	{
 		assert(idx < DimCols);
 		vec<DimRows, T> ret;
-		for (size_t i = DimRows; i--; ret[i] = rows[i][idx]);
+		for (size_t i = DimRows; i--; )
+            ret[i] = rows[i][idx];
 		return ret;
 	}
 
 	// 设置列
 	void set_col(size_t idx, vec<DimRows, T> v) {
 		assert(idx < DimCols);
-		for (size_t i = DimRows; i--; rows[i][idx] = v[i]);
+		for (size_t i = DimRows; i--; )
+            rows[i][idx] = v[i];
 	}
 
 	// 单位矩阵
 	static mat<DimRows, DimCols, T> identity() {
 		mat<DimRows, DimCols, T> ret;
 		for (size_t i = DimRows; i--; )
-			for (size_t j = DimCols; j--; ret[i][j] = (i == j));
+			for (size_t j = DimCols; j--; )
+                ret[i][j] = (i == j);
 		return ret;
 	}
 
@@ -127,27 +130,32 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////////
 
+// 矩阵×向量
 template<size_t DimRows, size_t DimCols, typename T>
 vec<DimRows, T> operator*(const mat<DimRows, DimCols, T>& lhs, const vec<DimCols, T>& rhs)
 {
 	vec<DimRows, T> ret;
-	for (size_t i = DimRows; i--; ret[i] = lhs[i] * rhs);
+	for (size_t i = DimRows; i--; )
+        ret[i] = lhs[i] * rhs;
 	return ret;
 }
 
+// 矩阵×矩阵
 template<size_t R1, size_t C1, size_t C2, typename T>
 mat<R1, C2, T> operator*(const mat<R1, C1, T>& lhs, const mat<C1, C2, T>& rhs)
 {
 	mat<R1, C2, T> result;
 	for (size_t i = R1; i--; )
-		for (size_t j = C2; j--; result[i][j] = lhs[i] * rhs.col(j));
+		for (size_t j = C2; j--; )
+            result[i][j] = lhs[i] * rhs.col(j);
 	return result;
 }
 
 template<size_t DimRows, size_t DimCols, typename T>
 mat<DimCols, DimRows, T> operator/(mat<DimRows, DimCols, T> lhs, const T& rhs)
 {
-	for (size_t i = DimRows; i--; lhs[i] = lhs[i] / rhs);
+	for (size_t i = DimRows; i--; )
+        lhs[i] = lhs[i] / rhs;
 	return lhs;
 }
 

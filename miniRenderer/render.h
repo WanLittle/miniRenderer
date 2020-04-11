@@ -12,7 +12,8 @@ void line(Vec2i v1, Vec2i v2, std::shared_ptr<Window>& win, int r, int g, int b,
 // Line sweeping 扫描线算法
 void triangle_linesweeping(mat<4, 3, float>& clipc, IShader& shader, std::shared_ptr<Window>& win, float* zbuffer);
 // 重心坐标系 光栅化算法
-void triangle_barycentric(mat<4, 3, float>& pts, IShader& shader, std::shared_ptr<Window>& win, float* zbuffer);
+void triangle_barycentric(const mat<4, 3, float>& clipc, const mat<4, 3, float>& ndc, 
+    IShader& shader, std::shared_ptr<Window>& win, float* zbuffer);
 
 struct IShader {
 	virtual ~IShader();
