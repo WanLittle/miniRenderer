@@ -1,4 +1,4 @@
-# miniRenderer
+# MiniRenderer
 
 3D 软件光栅化渲染器
 
@@ -6,20 +6,25 @@
 
 ## 特性
 
-- [x] 渲染管线
-  - [x] 右手坐标系，视图变换、透视&正交投影变换、视口变换
-  - [x] 线框模式：Bresenham直线算法
-  - [x] 填充模式：Scanline填充算法、重心坐标插值填充算法、透视校正插值
-  - [x] 顶点着色器、片段着色器
-  - [x] 背面剔除、深度测试
-- [x] 经典光照模型、Normal Mapping
-- [x] 模型文件 obj 支持
+- Qt 提供窗口绘制 和 相应事件
+
+- 渲染管线（参考 OpenGL）
+  - 右手坐标系，视图变换、透视&正交投影变换、视口变换
+  - 线框模式：Bresenham直线算法
+  - 填充模式：Scanline填充算法、重心坐标插值填充算法、透视校正插值
+  - 顶点着色器、片段着色器
+- 模型文件 obj 读取
+- Blin-phong 光照模型、Normal Mapping
+
+
+
+## 待做
+
+- [ ] 视锥剔除、背面剔除
+- [ ] 相机：第一人称相机、第三人称相机
+- [ ] Alpha测试、深度测试、混合
+- [ ] 骨骼动画
 
 
 
 ## 构建
-
-- 安装 vcpkg: https://github.com/Microsoft/vcpkg
-- 安装 SDL: `vcpkg install sdl`
-
-- cmake with vcpkg
