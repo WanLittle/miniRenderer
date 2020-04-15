@@ -17,12 +17,12 @@ namespace glm
         return Viewport;
     }
 
-    glm::Matrix lookat(glm::Vec3f eye, glm::Vec3f center, glm::Vec3f up)
+    glm::Matrix lookat(glm::vec3f eye, glm::vec3f center, glm::vec3f up)
     {
         glm::Matrix ModelView;
-        glm::Vec3f const z_axis((eye - center).normalize()); // z 轴
-        glm::Vec3f const x_axis(cross(up, z_axis).normalize()); // x 轴
-        glm::Vec3f const y_axis(cross(z_axis, x_axis)); // y 轴
+        glm::vec3f const z_axis((eye - center).normalize()); // z 轴
+        glm::vec3f const x_axis(cross(up, z_axis).normalize()); // x 轴
+        glm::vec3f const y_axis(cross(z_axis, x_axis)); // y 轴
         ModelView[0][0] = x_axis.x;
         ModelView[0][1] = x_axis.y;
         ModelView[0][2] = x_axis.z;

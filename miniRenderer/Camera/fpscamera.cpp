@@ -47,7 +47,7 @@ void FPSCamera::ProcessMouseScroll(float yoffset)
         zoom = 45.0f;
 }
 
-void FPSCamera::lookToPos(glm::Vec3f lookPos)
+void FPSCamera::lookToPos(glm::vec3f lookPos)
 {
     camera_forward = lookPos - camera_pos;
     updateCameraEulerAngles();
@@ -56,7 +56,7 @@ void FPSCamera::lookToPos(glm::Vec3f lookPos)
 
 void FPSCamera::updateCameraVectors()
 {
-    glm::Vec3f front;
+    glm::vec3f front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));

@@ -5,7 +5,7 @@
 #include "pipeline.h"
 
 
-void line(glm::Vec2i v1, glm::Vec2i v2, FrameBuffer* framebuffer, int r, int g, int b, int a)
+void line(glm::vec2i v1, glm::vec2i v2, FrameBuffer* framebuffer, int r, int g, int b, int a)
 {
 	bool steep = std::abs(v1.x - v2.x) < std::abs(v1.y - v2.y);
 	if (steep)
@@ -27,9 +27,9 @@ void line(glm::Vec2i v1, glm::Vec2i v2, FrameBuffer* framebuffer, int r, int g, 
 	for (int x = v1.x; x <= v2.x; ++x)
 	{
 		if (steep)
-			framebuffer->drawPixel(y, x, glm::Vec4f(r, g, b, a));
+			framebuffer->drawPixel(y, x, glm::vec4f(r, g, b, a));
 		else
-            framebuffer->drawPixel(x, y, glm::Vec4f(r, g, b, a));
+            framebuffer->drawPixel(x, y, glm::vec4f(r, g, b, a));
 		error = error - deltaY;
 		if (error < 0)
 		{

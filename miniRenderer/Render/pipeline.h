@@ -54,9 +54,9 @@ public:
     void swapFrameBuffer();
     void clearFrameBuffer(float r, float g, float b, float a)
     {
-        clearFrameBuffer(glm::Vec4f(r, g, b, a));
+        clearFrameBuffer(glm::vec4f(r, g, b, a));
     }
-    void clearFrameBuffer(const glm::Vec4f &color)
+    void clearFrameBuffer(const glm::vec4f &color)
     { 
         m_config.m_backBuffer->clearColorAndDepthBuffer(color); 
     }

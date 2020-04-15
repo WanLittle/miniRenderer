@@ -64,7 +64,8 @@ namespace glm
 
         vec(T X, T Y, T Z, T W) : x(X), y(Y), z(Z), w(W) {}
 
-        vec(const vec<3, T> &rhs, T W) : x(rhs[0]), y(rhs[1]), z(rhs[2]), w() {}
+        vec(const vec<3, T> &rhs, T W) : x(rhs[0]), y(rhs[1]), z(rhs[2]), w(W) {}
+        vec(const vec<3, T> &rhs) : x(rhs[0]), y(rhs[1]), z(rhs[2]), w(1.0f) {}
 
         T& operator[](const size_t i)
         {
@@ -154,10 +155,10 @@ namespace glm
         return out;
     }
 
-    typedef vec<2, float> Vec2f;
-    typedef vec<2, int>   Vec2i;
-    typedef vec<3, float> Vec3f;
-    typedef vec<3, int>   Vec3i;
-    typedef vec<4, float> Vec4f;
+    typedef vec<2, float> vec2f;
+    typedef vec<2, int>   vec2i;
+    typedef vec<3, float> vec3f;
+    typedef vec<3, int>   vec3i;
+    typedef vec<4, float> vec4f;
 
 }

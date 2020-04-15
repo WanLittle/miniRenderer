@@ -19,12 +19,12 @@ const float ZOOM = 45.0f;       //默认的视角
 class Camera
 {
 protected:
-    glm::Vec3f world_up;        //世界y轴方向
+    glm::vec3f world_up;        //世界y轴方向
 
-    glm::Vec3f camera_pos;      //摄像头位置
-    glm::Vec3f camera_up;       //摄像头的上方向
-    glm::Vec3f camera_forward;  //摄像头的朝向
-    glm::Vec3f camera_right;    //摄像头的右方向
+    glm::vec3f camera_pos;      //摄像头位置
+    glm::vec3f camera_up;       //摄像头的上方向
+    glm::vec3f camera_forward;  //摄像头的朝向
+    glm::vec3f camera_right;    //摄像头的右方向
 
     float yaw;                  //偏航角
     float pitch;                //俯仰角
@@ -33,7 +33,7 @@ protected:
     float MouseSensitivity;
     float zoom;                 // 摄像机fov
 public:
-    Camera(glm::Vec3f _world_up, float _yaw, float _pitch) 
+    Camera(glm::vec3f _world_up, float _yaw, float _pitch) 
         : world_up(_world_up), yaw(_yaw), pitch(_pitch),
         MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), zoom(ZOOM) {}
     virtual ~Camera(){}
@@ -49,7 +49,7 @@ public:
     virtual void ProcessMouseScroll(float yoffset) = 0;
 
     float getZoom() { return zoom; }
-    void setCameraPos(glm::Vec3f _camera_pos) 
+    void setCameraPos(glm::vec3f _camera_pos) 
     {
         camera_pos = _camera_pos;
     }

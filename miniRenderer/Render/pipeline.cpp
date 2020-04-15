@@ -51,22 +51,22 @@ void GLFunctions::setDefaultConfig()
     DepthRange(0.0f, 1.0f);
 }
 
-glm::Vec3f barycentric(glm::Vec2f A, glm::Vec2f B, glm::Vec2f C, glm::Vec2f P)
+glm::vec3f barycentric(glm::vec2f A, glm::vec2f B, glm::vec2f C, glm::vec2f P)
 {
-    glm::Vec3f s[2];
+    glm::vec3f s[2];
     for (int i = 2; i--; )
     {
         s[i][0] = C[i] - A[i];
         s[i][1] = B[i] - A[i];
         s[i][2] = A[i] - P[i];
     }
-    glm::Vec3f u = cross(s[0], s[1]);
+    glm::vec3f u = cross(s[0], s[1]);
     // TODO：为什么这种情况是退化三角形
     if (std::abs(u[2]) > 1e-2) //  u[2] is integer. 如果为0 则三角形ABC是退化的degenerate
     {
-        return glm::Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
+        return glm::vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
     }
-    return glm::Vec3f(-1, 1, 1); // 丢弃退化三角形
+    return glm::vec3f(-1, 1, 1); // 丢弃退化三角形
 }
 
 
@@ -74,14 +74,14 @@ void GLFunctions::triangle_barycentric(VertexOut &v1, VertexOut &v2, VertexOut &
 {
     std::shared_ptr<FrameBuffer> framebuffer = m_config.m_backBuffer;
 
-    glm::Vec2f vertex_fragment_coord[3];
+    glm::vec2f vertex_fragment_coord[3];
     vertex_fragment_coord[0] = glm::proj<2>(v1.gl_position);
     vertex_fragment_coord[1] = glm::proj<2>(v2.gl_position);
     vertex_fragment_coord[2] = glm::proj<2>(v3.gl_position);
 
-    glm::Vec2f bboxmin(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    glm::Vec2f bboxmax(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
-    glm::Vec2f clamp(framebuffer->getWidth() - 1, framebuffer->getHeight() - 1);
+    glm::vec2f bboxmin(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    glm::vec2f bboxmax(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
+    glm::vec2f clamp(framebuffer->getWidth() - 1, framebuffer->getHeight() - 1);
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 2; ++j)
@@ -91,17 +91,17 @@ void GLFunctions::triangle_barycentric(VertexOut &v1, VertexOut &v2, VertexOut &
         }
     }
 
-    glm::Vec2i P;
-    glm::Vec4f color;
+    glm::vec2i P;
+    glm::vec4f color;
     for (P.x = bboxmin.x; P.x <= bboxmax.x; ++P.x)
     {
         for (P.y = bboxmin.y; P.y <= bboxmax.y; ++P.y)
         {
             // 屏幕空间的质心坐标，用于插值顶点深度
-            glm::Vec3f bary_coor_screen = barycentric(vertex_fragment_coord[0], vertex_fragment_coord[1], vertex_fragment_coord[2], P);
+            glm::vec3f bary_coor_screen = barycentric(vertex_fragment_coord[0], vertex_fragment_coord[1], vertex_fragment_coord[2], P);
 
             // 透视校正插值，用于插值顶点属性
-            glm::Vec3f perspective_correction = glm::Vec3f(
+            glm::vec3f perspective_correction = glm::vec3f(
                 bary_coor_screen.x / v1.gl_position.w, 
                 bary_coor_screen.y / v2.gl_position.w,
                 bary_coor_screen.z / v3.gl_position.w
@@ -123,7 +123,7 @@ void GLFunctions::triangle_barycentric(VertexOut &v1, VertexOut &v2, VertexOut &
             frag.FragPos = v1.FragPos * w1 + v2.FragPos * w2 + v3.FragPos * w3;
             frag.Normal = v1.Normal * w1 + v2.Normal * w2 + v3.Normal * w3;
             frag.TexCoords = v1.TexCoords * w1 + v2.TexCoords * w2 + v3.TexCoords * w3;
-            frag.gl_FragCoord = glm::Vec4f(P.x, P.y, frag_depth, 1.0); // TODO 计算w
+            frag.gl_FragCoord = glm::vec4f(P.x, P.y, frag_depth, 1.0); // TODO 计算w
 
             bool discard = m_config.m_shader->fragment_shader(frag, color, m_config.m_model);
             if (!discard)

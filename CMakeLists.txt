@@ -9,8 +9,10 @@ find_package(Qt5 COMPONENTS REQUIRED Core Gui Widgets)
 # file from the qt5_wrap_ui call below.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file(GLOB_RECURSE project_sources MiniRenderer/*.c MiniRenderer/*.cpp)
-file(GLOB_RECURSE project_headers MiniRenderer/*.h)
+file(GLOB_RECURSE project_sources MiniRenderer/*.c MiniRenderer/*.cpp 
+								  external/*.c external/*.cpp)
+file(GLOB_RECURSE project_headers MiniRenderer/*.h 
+								  external/*.h)
 file(GLOB_RECURSE project_ui MiniRenderer/*.ui)
 
 set(all_files ${project_sources} ${project_headers} ${project_ui})

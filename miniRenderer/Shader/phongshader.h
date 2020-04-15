@@ -13,10 +13,10 @@ class PhongShader : public BaseShader
 {
 public:
     glm::Matrix projection, view, model;
-    glm::Vec3f light_dir;
+    glm::vec3f light_dir;
 
 public:
     virtual VertexOut vertex_shader(const VertexIn &in) override;
 
-    virtual bool fragment_shader(const VertexOut &out, glm::Vec4f& gl_FragColor, Model* m_model) override;
+    virtual bool fragment_shader(const VertexOut &out, glm::vec4f& gl_FragColor, Model* m_model) override;
 };

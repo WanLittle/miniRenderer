@@ -10,7 +10,7 @@ namespace glm
     glm::Matrix viewport(int x, int y, int w, int h, float n, float f);
 
     // 视图变换
-    glm::Matrix lookat(glm::Vec3f eye, glm::Vec3f center, glm::Vec3f up);
+    glm::Matrix lookat(glm::vec3f eye, glm::vec3f center, glm::vec3f up);
 
     // 透视投影矩阵
     glm::Matrix perspective(float fovy, float aspect, float zNear, float zFar);

@@ -15,12 +15,12 @@ GLWidget::GLWidget(QWidget *parent) :
     resize(800, 600);
     setWindowTitle("Mini Software Renderer");
 
-    fps = 0;
 
     gl = std::make_shared<GLFunctions>(width(), height());
     camera = std::make_shared<FPSCamera>();
 
     // fps ¿€º∆
+    fps = 0;
     timer = std::make_shared<QTimer>();
     connect(timer.get(), &QTimer::timeout, this, &GLWidget::fpsTimeOut);
     timer->start(1000);
@@ -66,7 +66,7 @@ void GLWidget::paintEvent(QPaintEvent *event)
     if(canvas)
     {
         QPainter painter(this);
-        painter.drawImage(0, 0, *canvas);
+        painter.drawImage(0, 0, (*canvas).mirrored(false, true));
     }
     QWidget::paintEvent(event);
 }
